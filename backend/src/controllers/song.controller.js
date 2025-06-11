@@ -1,15 +1,18 @@
-import{Song} from "../models/song.model.js"
+import { Song } from "../models/song.model.js";
 
-export const  getAllSongs = async (req, res, next)=> {
-try {
-    const songs = await Song.find().sort({createAt: -1}); // -1 is because it will be fetched as the newest one 
-    res.json(songs)
-} catch (error) {
-    next(error);
-}
-}
-export const getFeaturedSongs = async(req, res, next) => {
-try {
+export const getAllSongs = async (req, res, next) => {
+	try {
+		// -1 = Descending => newest -> oldest
+		// 1 = Ascending => oldest -> newest
+		const songs = await Song.find().sort({ createdAt: -1 });
+		res.json(songs);
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getFeaturedSongs = async (req, res, next) => {
+	try {
 		// fetch 6 random songs using mongodb's aggregation pipeline
 		const songs = await Song.aggregate([
 			{
@@ -30,9 +33,10 @@ try {
 	} catch (error) {
 		next(error);
 	}
-}
-export const getMadeForYouSongs = async(req, res, next) => {
-    try {
+};
+
+export const getMadeForYouSongs = async (req, res, next) => {
+	try {
 		const songs = await Song.aggregate([
 			{
 				$sample: { size: 4 },
@@ -52,10 +56,10 @@ export const getMadeForYouSongs = async(req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-}
+};
 
-export const getTrendingSongs = async(req, res, next) => {
-    try {
+export const getTrendingSongs = async (req, res, next) => {
+	try {
 		const songs = await Song.aggregate([
 			{
 				$sample: { size: 4 },
@@ -75,4 +79,4 @@ export const getTrendingSongs = async(req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-}
+};
